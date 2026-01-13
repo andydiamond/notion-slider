@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notion Slider</title>
+    <style>
+        /* This ensures the slider fits the Notion window perfectly */
+        body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; background-color: #ffffff; font-family: sans-serif; }
+        
+        .container {
+            position: relative;
+            width: 100%;
+            max-width: 100%; /* Allows it to fill the Notion block */
+            line-height: 0; /* Removes weird gaps below images */
+        }
+
+        /* The Background Image (Right side / After) */
+        .img-background {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* The Foreground Image (Left side / Before) */
+        .img-foreground {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 50%; /* Start at 50% */
+            overflow: hidden;
+            border-right: 3px solid white; /* The white line separator */
+        }
+        
+        .img-foreground img {
+            height: 100%;
+            display: block;
+            /* Important: This keeps the image aspect ratio correct while cropping */
+            object-fit: cover; 
+            object-position: left; 
+        }
+
+        /* The Slider Handle (Invisible Range Input) */
+        .slider {
+            position: absolute;
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            outline: none;
+            margin: 0;
+            top: 0;
+            left: 0;
+            cursor: col-resize; /* Shows the left-right arrow cursor */
+        }
+
+        /* The circle handle for Chrome/Safari */
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid #333;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            /* Adds little arrows inside the circle */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23333'%3E%3Cpath d='M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z'/%3E%3Cpath d='M8.59 16.59L10 18l6-6-6-6-1.41 1.41L13.17 12z'/%3E%3C/svg%3E");
+            background-size: 24px;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        /* The circle handle for Firefox */
+        .slider::-moz-range-thumb {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: 2px solid #333;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- 1. The 'After' image (Background) -->
+    <!-- CHANGE THE FILENAME BELOW IF YOUR FILE IS NOT NAMED after.jpg -->
+    <img src="CalDelta_BarType.jpg" class="img-background" id="bgImg">
+
+    <!-- 2. The 'Before' image (Foreground) -->
+    <div class="img-foreground" id="fgDiv">
+        <!-- CHANGE THE FILENAME BELOW IF YOUR FILE IS NOT NAMED before.jpg -->
+        <img src="OneMinute_BarType.jpg" id="fgImg">
+    </div>
+
+    <!-- 3. The Slider Control -->
+    <input type="range" min="0" max="100" value="50" class="slider" id="slider" oninput="moveDiv(this.value)">
+</div>
+
+<script>
+    const slider = document.getElementById("slider");
+    const fgDiv = document.getElementById("fgDiv");
+    const fgImg = document.getElementById("fgImg");
+    const bgImg = document.getElementById("bgImg");
+
+    // This function runs every time you resize the window to keep images synced
+    function syncImages() {
+        if(bgImg.offsetWidth > 0) {
+            fgImg.style.width = bgImg.offsetWidth + "px";
+        }
+    }
+
+    // Move the divider based on slider input
+    function moveDiv(val) {
+        fgDiv.style.width = val + "%";
+    }
+
+    // Listeners to ensure sizing is correct
+    window.onload = syncImages;
+    window.onresize = syncImages;
+</script>
+
+</body>
+</html>
